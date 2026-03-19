@@ -1,123 +1,140 @@
 import requests
 import pandas as pd
-from datetime import datetime
+import time
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # =========================
 # CONFIG
 # =========================
-START_YEAR = 2016
-END_YEAR = 2024
+
+YEAR = 2016   # <<< CHANGE THIS EACH RUN
+
+API_KEY = os.getenv("UNCOMTRADE_API_KEY")
 
 COUNTRIES = {
-    "Russia": 643,
-    "China": 156,
-    "USA": 840
+    # "Russia": 643,
+    # "China": 156,
+    "USA": 842
 }
 
 REPORTER_CODE = 699  # India
+
 BASE_URL = "https://comtradeapi.un.org/data/v1/get/C/M/HS"
 
+HEADERS = {
+    "Ocp-Apim-Subscription-Key": API_KEY,
+    "Cache-Control": "no-cache"
+}
+
+
 # =========================
-# HELPER FUNCTIONS
+# FETCH FUNCTION
 # =========================
+
 def fetch_trade_data(partner_code, flow_code):
+
     rows = []
 
-    for year in range(START_YEAR, END_YEAR + 1):
-        for month in range(1, 13):
-            period = f"{year}{month:02d}"
+    for month in range(1, 13):
 
-            params = {
-                "reporterCode": REPORTER_CODE,
-                "partnerCode": partner_code,
-                "period": period,
-                "cmdCode": "TOTAL",
-                "flowCode": flow_code,
-                "aggregateBy": "period",
-                "breakdownMode": "plus"
-            }
+        period = f"{YEAR}{month:02d}"
 
-            r = requests.get(BASE_URL, params=params, timeout=30)
+        params = {
+            "reporterCode": REPORTER_CODE,
+            "partnerCode": partner_code,
+            "period": period,
+            "cmdCode": "TOTAL",
+            "flowCode": flow_code,
+            "aggregateBy": "period",
+            "breakdownMode": "plus",
+            "includeDesc": "true"
+        }
 
-            if r.status_code != 200:
-                print(f"Failed: {period}")
+        while True:
+
+            r = requests.get(
+                BASE_URL,
+                params=params,
+                headers=HEADERS,
+                timeout=30
+            )
+
+            # ✅ rate limit
+            if r.status_code == 429:
+                print("Rate limit hit → waiting 25 sec")
+                time.sleep(25)
                 continue
 
-            data = r.json().get("data", [])
-
-            if len(data) == 0:
-                rows.append({"date": pd.to_datetime(period, format="%Y%m"), "value": 0})
-            else:
+            # ✅ other error
+            if r.status_code != 200:
+                print("Failed:", period, r.status_code)
                 rows.append({
                     "date": pd.to_datetime(period, format="%Y%m"),
-                    "value": data[0]["primaryValue"]
+                    "value": 0
                 })
+                break
+
+            js = r.json()
+
+            if "data" not in js or len(js["data"]) == 0:
+                value = 0
+            else:
+                value = js["data"][0]["primaryValue"]
+
+            rows.append({
+                "date": pd.to_datetime(period, format="%Y%m"),
+                "value": value
+            })
+
+            print("OK", period)
+
+            time.sleep(1)  # prevent limit
+            break
 
     return pd.DataFrame(rows)
 
 
+# =========================
+# BUILD CSV FOR COUNTRY
+# =========================
+
 def build_trade_csv(country_name, partner_code):
-    print(f"Fetching {country_name} trade data...")
+
+    print(f"\nFetching {country_name} {YEAR}")
 
     imports = fetch_trade_data(partner_code, "M")
     exports = fetch_trade_data(partner_code, "X")
 
-    imports.rename(columns={"value": f"India_Imports_{country_name}"}, inplace=True)
-    exports.rename(columns={"value": f"India_Exports_{country_name}"}, inplace=True)
+    imports.rename(
+        columns={"value": f"India_Imports_{country_name}"},
+        inplace=True
+    )
+
+    exports.rename(
+        columns={"value": f"India_Exports_{country_name}"},
+        inplace=True
+    )
 
     df = imports.merge(exports, on="date", how="outer")
+
     df.sort_values("date", inplace=True)
 
-    df.to_csv(f"trade_india_{country_name.lower()}.csv", index=False)
-    return df
+    filename = f"trade_{country_name.lower()}_{YEAR}.csv"
+
+    df.to_csv(filename, index=False)
+
+    print("Saved:", filename)
 
 
 # =========================
-# TRADE DATA
+# MAIN LOOP
 # =========================
-trade_dfs = []
 
 for country, code in COUNTRIES.items():
-    df = build_trade_csv(country, code)
-    trade_dfs.append(df)
+    build_trade_csv(country, code)
 
-# =========================
-# MASTER DATE INDEX
-# =========================
-dates = pd.date_range(start="2016-01-01", end="2024-12-01", freq="MS")
-master = pd.DataFrame({"date": dates})
 
-for df in trade_dfs:
-    master = master.merge(df, on="date", how="left")
-
-# =========================
-# MACRO DATA (PLACEHOLDERS)
-# Replace later with real APIs
-# =========================
-master["Oil_Price"] = 60 + (master.index % 20)
-master["USD_INR"] = 65 + (master.index % 10)
-
-master["GDP_India"] = 2.3e12
-master["GDP_Russia"] = 1.6e12
-master["GDP_China"] = 14e12
-master["GDP_USA"] = 21e12
-
-# =========================
-# TRADE BALANCE
-# =========================
-import_cols = [c for c in master.columns if "Imports" in c]
-export_cols = [c for c in master.columns if "Exports" in c]
-
-master["Total_Imports"] = master[import_cols].sum(axis=1)
-master["Total_Exports"] = master[export_cols].sum(axis=1)
-
-master["Trade_Balance"] = master["Total_Exports"] - master["Total_Imports"]
-
-master.drop(columns=["Total_Imports", "Total_Exports"], inplace=True)
-
-# =========================
-# FINAL OUTPUT
-# =========================
-master.to_csv("final_trade_dataset.csv", index=False)
-
-print("✅ Final dataset created: final_trade_dataset.csv")
+print("\nDONE FOR YEAR", YEAR)
