@@ -1,0 +1,167 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-headline: 'Manrope', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-label: 'Inter', system-ui, sans-serif;
+
+  --color-secondary-dim: #ccd5e4;
+  --color-on-surface: #ecedf6;
+  --color-surface-tint: #69daff;
+  --color-on-tertiary-container: #005c44;
+  --color-on-background: #ecedf6;
+  --color-outline: #73757d;
+  --color-on-error-container: #ffa8a3;
+  --color-tertiary-fixed-dim: #00edb4;
+  --color-on-primary: #004a5d;
+  --color-surface-container: #161a21;
+  --color-inverse-surface: #f9f9ff;
+  --color-inverse-on-surface: #52555c;
+  --color-surface-container-highest: #22262f;
+  --color-on-tertiary-fixed-variant: #00664c;
+  --color-error-container: #9f0519;
+  --color-surface: #0b0e14;
+  --color-on-secondary: #49525f;
+  --color-on-secondary-fixed-variant: #535c69;
+  --color-tertiary-fixed: #00fdc1;
+  --color-tertiary-container: #00fdc1;
+  --color-primary-fixed-dim: #00c0ea;
+  --color-on-tertiary: #00654b;
+  --color-primary-fixed: #00cffc;
+  --color-on-primary-container: #004050;
+  --color-surface-container-lowest: #000000;
+  --color-primary-container: #00cffc;
+  --color-on-primary-fixed-variant: #004a5c;
+  --color-on-surface-variant: #a9abb3;
+  --color-background: #0b0e14;
+  --color-secondary-container: #3e4754;
+  --color-surface-variant: #22262f;
+  --color-on-primary-fixed: #002a35;
+  --color-primary: #69daff;
+  --color-tertiary-dim: #00edb4;
+  --color-primary-dim: #00c0ea;
+  --color-secondary: #dae3f2;
+  --color-tertiary: #aaffdc;
+  --color-error-dim: #d7383b;
+  --color-on-error: #490006;
+  --color-inverse-primary: #006880;
+  --color-outline-variant: #45484f;
+  --color-secondary-fixed-dim: #ccd5e4;
+  --color-error: #ff716c;
+  --color-on-tertiary-fixed: #004734;
+  --color-secondary-fixed: #dae3f2;
+  --color-surface-container-high: #1c2028;
+  --color-on-secondary-fixed: #37404c;
+  --color-surface-bright: #282c36;
+  --color-surface-container-low: #10131a;
+  --color-surface-dim: #0b0e14;
+  --color-on-secondary-container: #c8d1e0;
+}
+
+/* ======================================================
+   LIGHT MODE OVERRIDES
+   When <html> does NOT have .dark, swap to light palette.
+   The @theme block above defines the dark (default) values.
+   ====================================================== */
+:root:not(.dark) {
+  --color-surface: #f5f7fa;
+  --color-background: #f0f2f5;
+  --color-surface-dim: #e8eaef;
+  --color-surface-bright: #ffffff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f0f2f5;
+  --color-surface-container: #e8eaef;
+  --color-surface-container-high: #e0e3e9;
+  --color-surface-container-highest: #d5d8df;
+  --color-surface-variant: #dfe2e8;
+  --color-on-surface: #1a1c22;
+  --color-on-surface-variant: #5a5d65;
+  --color-on-background: #1a1c22;
+  --color-outline: #74777f;
+  --color-outline-variant: #c4c6cf;
+  --color-inverse-surface: #2e3038;
+  --color-inverse-on-surface: #f0f0f8;
+  --color-inverse-primary: #69daff;
+  --color-primary: #0088aa;
+  --color-primary-dim: #006a85;
+  --color-primary-container: #c2eeff;
+  --color-primary-fixed: #c2eeff;
+  --color-primary-fixed-dim: #80d8f8;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #001f2a;
+  --color-on-primary-fixed: #001f2a;
+  --color-on-primary-fixed-variant: #004d62;
+  --color-secondary: #4e5764;
+  --color-secondary-dim: #3a424e;
+  --color-secondary-container: #d4dcea;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #3a424e;
+  --color-on-secondary-fixed: #1a222e;
+  --color-on-secondary-fixed-variant: #3a424e;
+  --color-secondary-fixed: #d4dcea;
+  --color-secondary-fixed-dim: #b8c1d0;
+  --color-tertiary: #006b50;
+  --color-tertiary-dim: #00543f;
+  --color-tertiary-container: #80f8c8;
+  --color-tertiary-fixed: #80f8c8;
+  --color-tertiary-fixed-dim: #00d8a0;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #002117;
+  --color-on-tertiary-fixed: #002117;
+  --color-on-tertiary-fixed-variant: #00533e;
+  --color-error: #ba1a1a;
+  --color-error-dim: #93000a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #410002;
+  --color-surface-tint: #0088aa;
+}
+
+/* ======================================================
+   UTILITY CLASSES
+   ====================================================== */
+@layer utilities {
+  .neumorphic-elevated {
+    background: var(--color-surface-container);
+    box-shadow: 10px 10px 20px #080a0e, -5px -5px 15px rgba(255, 255, 255, 0.02);
+  }
+
+  .neumorphic-recessed {
+    background: var(--color-surface-container-low);
+    box-shadow: inset 4px 4px 8px #080a0e, inset -2px -2px 6px rgba(255, 255, 255, 0.01);
+  }
+
+  .glass-panel {
+    backdrop-filter: blur(16px);
+    background: rgba(22, 26, 33, 0.7);
+  }
+}
+
+/* Light mode overrides for utility classes */
+:root:not(.dark) .neumorphic-elevated {
+  background: var(--color-surface-container);
+  box-shadow: 6px 6px 16px rgba(0, 0, 0, 0.08), -4px -4px 12px rgba(255, 255, 255, 0.8);
+}
+
+:root:not(.dark) .neumorphic-recessed {
+  background: var(--color-surface-container-low);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.06), inset -2px -2px 4px rgba(255, 255, 255, 0.7);
+}
+
+:root:not(.dark) .glass-panel {
+  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+body {
+  overflow: hidden;
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  font-family: var(--font-body);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
