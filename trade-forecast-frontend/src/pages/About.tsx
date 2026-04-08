@@ -44,7 +44,7 @@ export default function About() {
             <h3 className="text-lg font-bold font-headline text-on-surface">The Inspiration</h3>
           </div>
           <p className="text-sm text-on-surface-variant font-inter leading-relaxed">
-            The global economy is a complex organism. TradeCast was born to visualize its hidden pulse, turning international commerce chaos into a luminous, readable narrative of global health.
+            When India signed the 'Mother of All Trade Deals' in January 2026, I became deeply curious about the nation's future. I wondered if there was a way to predict how India would look after such a landmark agreement, which sparked the initial idea for TradeCast.
           </p>
         </div>
         <div className="neumorphic-elevated bg-surface-container-high p-8 rounded-[1.5rem] border border-white/5">
@@ -53,7 +53,7 @@ export default function About() {
             <h3 className="text-lg font-bold font-headline text-on-surface">Why I Built This</h3>
           </div>
           <p className="text-sm text-on-surface-variant font-inter leading-relaxed">
-            I built this platform to provide a wide-angle lens on trade data, empowering analysts with sophisticated intelligence reserved for high-frequency trading floors, democratizing strategic foresight.
+            I wanted to solve this challenge through the lens of a Machine Learning Engineer. After two long months of intensive research and development, I built TradeCast to transform complex trade dynamics into a readable narrative of economic health.
           </p>
         </div>
       </motion.section>
@@ -100,19 +100,29 @@ export default function About() {
         className="mt-auto py-4 border-t border-white/5 flex items-center justify-between gap-8"
       >
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
-            <span className="material-symbols-outlined text-primary text-xl" data-icon="terminal">terminal</span>
+          <div className="w-10 h-10 rounded-full bg-red-400/10 flex items-center justify-center border border-red-400/20">
+            <span className="material-symbols-outlined text-red-400 text-xl" data-icon="favorite">favorite</span>
           </div>
           <div>
-            <h5 className="font-bold text-sm text-on-surface">Build the future of Finance</h5>
+            <h5 className="font-bold text-sm text-on-surface">Made with Love and Hardwork by Aryan Kulkarni ❤️</h5>
             <p className="text-[10px] text-on-surface-variant uppercase tracking-widest">TradeCast © 2025</p>
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <a className="flex items-center gap-3 px-5 py-2.5 rounded-full neumorphic-elevated bg-surface-container-high text-on-surface-variant hover:text-primary transition-all group border border-white/5 hover:scale-105" href="#">
+          <a
+            className="flex items-center gap-3 px-5 py-2.5 rounded-full neumorphic-elevated bg-surface-container-high text-on-surface-variant hover:text-primary transition-all group border border-white/5 hover:scale-105"
+            href="https://www.linkedin.com/in/aryan-kulkarni-a24a182b9"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <span className="font-bold text-xs uppercase tracking-wider">LinkedIn</span>
           </a>
-          <a className="flex items-center gap-3 px-5 py-2.5 rounded-full neumorphic-elevated bg-surface-container-high text-on-surface-variant hover:text-white transition-all group border border-white/5 hover:scale-105" href="#">
+          <a
+            className="flex items-center gap-3 px-5 py-2.5 rounded-full neumorphic-elevated bg-surface-container-high text-on-surface-variant hover:text-white transition-all group border border-white/5 hover:scale-105"
+            href="https://github.com/AryanKulkarni11042005/Trade-Forecasting-ML-Model.git"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <span className="font-bold text-xs uppercase tracking-wider">GitHub</span>
           </a>
         </div>

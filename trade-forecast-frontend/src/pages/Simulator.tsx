@@ -134,7 +134,6 @@ export default function Simulator() {
     const newSliders = { ...sliders, [key]: value };
     setSliders(newSliders);
     setActivePreset(null);
-    runSimulation(newSliders);
   };
 
   const handlePreset = (name: string) => {
@@ -142,7 +141,6 @@ export default function Simulator() {
     const newSliders = { ...defaultSliders, ...preset };
     setSliders(newSliders);
     setActivePreset(name);
-    runSimulation(newSliders);
   };
 
   const handleReset = () => {

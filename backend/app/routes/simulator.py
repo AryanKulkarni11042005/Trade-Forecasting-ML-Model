@@ -8,10 +8,15 @@ from app.utils.feature_engineering import create_features
 
 @router.post("/simulate")
 def simulate(data: SimulatorInput):
-    # Use full historical_df so that rolling/lag calculations work
+    # Calculate baseline first on the untouched dataset
+    df_baseline = historical_df.copy()
+    df_baseline = create_features(df_baseline)
+    baseline_latest = df_baseline.iloc[-1:].copy()
+    baseline_row = baseline_latest.reindex(columns=features, fill_value=0)
+    baseline_prediction = float(model.predict(baseline_row)[0])
+
+    # Now apply slider changes to the original data
     df_sim = historical_df.copy()
-    
-    # Target the last row
     idx = df_sim.index[-1]
     
     df_sim.loc[idx, "oil_price"] *= (1 + data.oil_change / 100)
@@ -29,11 +34,15 @@ def simulate(data: SimulatorInput):
     row = latest.reindex(columns=features, fill_value=0)
 
     prediction = float(model.predict(row)[0])
-    current = float(historical_df.iloc[-1]["trade_deficit_next"])
+
+    print("Baseline Prediction:", baseline_prediction)
+    print("New Prediction:", prediction)
+    print("Oil Price:", latest["oil_price"].values[0])
+    print("USD/INR:", latest["usd_inr"].values[0])
 
     return {
-        "current_prediction": current,
+        "current_prediction": baseline_prediction,
         "new_prediction": prediction,
-        "difference": round(prediction - current, 2),
-        "difference_percent": round(((prediction - current) / abs(current)) * 100, 2)
+        "difference": round(prediction - baseline_prediction, 2),
+        "difference_percent": round(((prediction - baseline_prediction) / abs(baseline_prediction)) * 100, 2)
     }
