@@ -3,9 +3,9 @@ import pandas as pd
 
 data = yf.download(
     "USDINR=X",
-    start="2025-01-01",
-    end="2025-12-31",
-    interval="1mo"
+    start="2026-04-06",
+    # end="2025-12-31",
+    # interval="1mo"
 )
 
 data = data.reset_index()

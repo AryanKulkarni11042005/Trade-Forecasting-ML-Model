@@ -1,7 +1,24 @@
+import { useEffect, useState } from 'react';
 import { useThemeStore } from '../store/themeStore';
+import { useCurrencyStore } from '../store/currencyStore';
+import { getDashboardData } from '../services/api';
 
 export default function Header() {
   const { isDark, toggle } = useThemeStore();
+  const { mode, toggleCurrency, setRate } = useCurrencyStore();
+  const [lastUpdated, setLastUpdated] = useState<string>('—');
+
+  useEffect(() => {
+    getDashboardData()
+      .then((data) => {
+        const d = new Date(data.last_updated);
+        setLastUpdated(d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }));
+        if (data.usd_inr) setRate(data.usd_inr);
+      })
+      .catch(() => {
+        setLastUpdated('—');
+      });
+  }, [setRate]);
 
   return (
     <header className="fixed top-0 right-0 w-[calc(100%-15rem)] z-40 backdrop-blur-xl flex justify-end items-center h-14 px-6 gap-6 shadow-sm"
@@ -11,9 +28,21 @@ export default function Header() {
         <h2 className="font-headline font-bold text-base text-on-surface">Intelligence Overview</h2>
       </div>
       <div className="flex items-center gap-4 text-[10px] text-on-surface-variant">
-        <span className="hidden sm:inline">Last Updated: Oct 2025</span>
-        <div className="h-3 w-[1px] bg-outline-variant hidden sm:block"></div>
+        <span className="hidden sm:inline">Last Updated: {lastUpdated}</span>
+        <div className="h-3 w-[1px] bg-outline-variant hidden sm:block" />
         <div className="flex items-center gap-1">
+          {/* Currency Toggle */}
+          <button
+            onClick={toggleCurrency}
+            className="rounded-full px-2.5 py-1 cursor-pointer active:opacity-70 transition-all hover:bg-surface-container-high flex items-center gap-1.5 border border-outline-variant/20"
+            title={`Switch to ${mode === 'INR' ? 'USD' : 'INR'}`}
+          >
+            <span className="material-symbols-outlined text-primary text-sm">
+              currency_exchange
+            </span>
+            <span className="text-[10px] font-bold text-primary uppercase tracking-wider">{mode}</span>
+          </button>
+          {/* Theme Toggle */}
           <button
             onClick={toggle}
             className="rounded-full p-1.5 cursor-pointer active:opacity-70 transition-all hover:bg-surface-container-high"
@@ -21,11 +50,6 @@ export default function Header() {
           >
             <span className="material-symbols-outlined text-primary text-lg">
               {isDark ? 'light_mode' : 'dark_mode'}
-            </span>
-          </button>
-          <button className="rounded-full p-1.5 cursor-pointer active:opacity-70 transition-opacity hover:bg-surface-container-high">
-            <span className="material-symbols-outlined text-primary text-lg" data-icon="payments">
-              payments
             </span>
           </button>
         </div>
