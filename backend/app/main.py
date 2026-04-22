@@ -6,6 +6,7 @@ from app.routes.forecast import router as forecast_router
 from app.routes.simulator import router as simulator_router
 from app.routes.explainability import router as explainability_router
 from app.routes.data import router as data_router
+from app.routes.live_market import router as live_market_router
 
 app = FastAPI(title="Trade Forecasting API")
 
@@ -22,6 +23,7 @@ app.include_router(forecast_router)
 app.include_router(simulator_router)
 app.include_router(explainability_router)
 app.include_router(data_router)
+app.include_router(live_market_router)
 
 @app.get("/")
 def root():
