@@ -58,31 +58,7 @@ export default function Sidebar() {
           </NavLink>
         ))}
       </nav>
-      <div className="px-4 mt-auto">
-        <div
-          className="p-3 rounded-xl flex items-center gap-3 border transition-colors"
-          style={{
-            backgroundColor: isDark ? 'rgba(28, 32, 40, 0.3)' : 'rgba(255,255,255,0.5)',
-            borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)',
-          }}
-        >
-          <div
-            className="w-8 h-8 rounded-full flex items-center justify-center border"
-            style={{
-              backgroundColor: isDark ? 'rgba(105,218,255,0.2)' : 'rgba(0,136,170,0.1)',
-              borderColor: isDark ? 'rgba(105,218,255,0.3)' : 'rgba(0,136,170,0.2)',
-            }}
-          >
-            <span className="material-symbols-outlined text-primary text-lg" data-icon="person">
-              person
-            </span>
-          </div>
-          <div className="min-w-0">
-            <p className="text-[11px] font-bold truncate text-on-surface">Lead Analyst</p>
-            <p className="text-[9px] text-on-surface-variant truncate">Global Markets</p>
-          </div>
-        </div>
-      </div>
+
     </aside>
   );
 }
