@@ -68,14 +68,11 @@ export default function About() {
           </div>
           <div className="h-[1px] flex-grow mx-6 bg-outline-variant/10" />
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
             { name: 'CatBoost', icon: 'hub', color: 'text-primary', hover: 'group-hover:bg-primary/10' },
             { name: 'FastAPI', icon: 'bolt', color: 'text-tertiary', hover: 'group-hover:bg-tertiary/10' },
             { name: 'React', icon: 'deployed_code', color: 'text-sky-400', hover: 'group-hover:bg-sky-400/10' },
-            { name: 'Supabase', icon: 'database', color: 'text-emerald-400', hover: 'group-hover:bg-emerald-400/10' },
-            { name: 'Docker', icon: 'box', color: 'text-blue-400', hover: 'group-hover:bg-blue-400/10' },
-            { name: 'Airflow', icon: 'cyclone', color: 'text-primary-dim', hover: 'group-hover:bg-primary-dim/10' },
           ].map((tech, i) => (
             <motion.div
               key={tech.name}
