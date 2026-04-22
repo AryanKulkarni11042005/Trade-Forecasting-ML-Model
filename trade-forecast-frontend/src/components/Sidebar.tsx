@@ -29,7 +29,7 @@ export default function Sidebar() {
           TradeCast
         </h1>
       </div>
-      <nav className="flex-1 space-y-1">
+      <nav id="sidebar-nav" className="flex-1 space-y-1">
         {navItems.map((item) => (
           <NavLink
             key={item.name}
@@ -49,6 +49,7 @@ export default function Sidebar() {
                     }`
               }`
             }
+            id={`nav-${item.name.toLowerCase()}`}
           >
             <span className="material-symbols-outlined text-xl" data-icon={item.icon}>
               {item.icon}

@@ -1,8 +1,15 @@
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
+import { useTour } from '../hooks/useTour';
+import { useEffect } from 'react';
 
 export default function Layout() {
+  const { checkAndStartTour } = useTour();
+
+  useEffect(() => {
+    checkAndStartTour();
+  }, [checkAndStartTour]);
   return (
     <div className="bg-surface font-body text-on-surface selection:bg-primary/30 h-screen w-screen overflow-hidden flex">
       <Sidebar />

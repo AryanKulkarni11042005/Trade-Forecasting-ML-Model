@@ -17,6 +17,13 @@ export interface DashboardData {
   last_updated: string
 }
 
+export interface LiveMarketData {
+  usd_inr: number
+  oil_price: number
+  updated_at: string
+}
+
+
 export interface HistoricalRecord {
   date: string
   trade_deficit: number
@@ -87,6 +94,11 @@ export interface SimulatorResult {
 
 export async function getDashboardData(): Promise<DashboardData> {
   const { data } = await api.get<DashboardData>('/dashboard')
+  return data
+}
+
+export async function getLiveMarketData(): Promise<LiveMarketData> {
+  const { data } = await api.get<LiveMarketData>('/live-market')
   return data
 }
 

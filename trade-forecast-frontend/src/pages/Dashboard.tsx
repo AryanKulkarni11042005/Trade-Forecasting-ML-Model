@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart, CartesianGrid } from 'recharts';
-import { getDashboardData, getHistoricalData, getFeatureImportance } from '../services/api';
-import type { DashboardData, HistoricalRecord, FeatureImportanceItem } from '../services/api';
+import { getDashboardData, getHistoricalData, getFeatureImportance, getLiveMarketData } from '../services/api';
+import type { DashboardData, HistoricalRecord, FeatureImportanceItem, LiveMarketData } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { useCurrencyStore, formatCurrencyValue } from '../store/currencyStore';
 
@@ -69,10 +69,25 @@ export default function Dashboard() {
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
   const [historical, setHistorical] = useState<HistoricalRecord[] | null>(null);
   const [features, setFeatures] = useState<FeatureImportanceItem[] | null>(null);
+  const [liveData, setLiveData] = useState<LiveMarketData | null>(null);
+  const [liveLoading, setLiveLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const navigate = useNavigate();
   const { mode, usdInrRate, setRate } = useCurrencyStore();
+
+  const fetchLive = async () => {
+    setLiveLoading(true);
+    try {
+      const res = await getLiveMarketData();
+      setLiveData(res);
+      if (res.usd_inr) setRate(res.usd_inr);
+    } catch (err) {
+      console.error("Failed to load live data:", err);
+    } finally {
+      setLiveLoading(false);
+    }
+  };
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -87,6 +102,7 @@ export default function Dashboard() {
       setHistorical(histRes);
       setFeatures(featRes.feature_importance.slice(0, 3));
       if (dashRes.usd_inr) setRate(dashRes.usd_inr);
+      fetchLive(); // Fetch live data without blocking dashboard
     } catch {
       setError(true);
     } finally {
@@ -160,7 +176,7 @@ export default function Dashboard() {
     <AnimatePresence>
       <>
         {/* Row 1: KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 flex-shrink-0">
+        <div id="dashboard-stats" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 flex-shrink-0">
           {/* KPI 1 */}
           <motion.div
             custom={0} initial="hidden" animate="visible" variants={cardVariants}
@@ -316,38 +332,56 @@ export default function Dashboard() {
         {/* Row 3: Detail Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 flex-shrink-0">
           {/* Oil Price */}
-          <motion.div custom={4} initial="hidden" animate="visible" variants={cardVariants}
-            className="neumorphic-elevated rounded-xl p-4 flex flex-col justify-between h-32 border border-white/5"
-          >
-            <div className="flex justify-between items-center">
-              <span className="text-[10px] font-label text-on-surface-variant">Crude Oil (WTI)</span>
-              <span className="material-symbols-outlined text-on-surface-variant text-lg" data-icon="oil_barrel">oil_barrel</span>
-            </div>
-            <div>
-              <h4 className="text-xl font-headline font-bold">
-                {formatCurrencyValue(dashboard.oil_price, mode, usdInrRate, { isAlreadyUsd: true })}
-              </h4>
-            </div>
-            <div className="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden mt-1">
-              <div className="w-2/3 h-full bg-error" />
-            </div>
-          </motion.div>
+          {liveLoading ? (
+            <SkeletonCard />
+          ) : (
+            <motion.div custom={4} initial="hidden" animate="visible" variants={cardVariants}
+              className="neumorphic-elevated rounded-xl p-4 flex flex-col justify-between h-32 border border-white/5 relative overflow-hidden"
+            >
+              <div className="absolute top-2 right-2 flex items-center gap-1.5 bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(105,218,255,0.8)]" />
+                <span className="text-[8px] uppercase font-bold text-primary tracking-wider">Live</span>
+              </div>
+              <div className="flex justify-between items-center mt-1">
+                <span className="text-[10px] font-label text-on-surface-variant">Crude Oil (Brent)</span>
+                <span className="material-symbols-outlined text-on-surface-variant text-lg" data-icon="oil_barrel">oil_barrel</span>
+              </div>
+              <div>
+                <h4 className="text-xl font-headline font-bold">
+                  {formatCurrencyValue(liveData?.oil_price ?? dashboard.oil_price, mode, usdInrRate, { isAlreadyUsd: true })}
+                </h4>
+              </div>
+              <div className="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden mt-1">
+                <div className="w-2/3 h-full bg-error" />
+              </div>
+            </motion.div>
+          )}
 
           {/* Currency Rate */}
-          <motion.div custom={5} initial="hidden" animate="visible" variants={cardVariants}
-            className="neumorphic-elevated rounded-xl p-4 flex flex-col justify-between h-32 border border-white/5"
-          >
-            <div className="flex justify-between items-center">
-              <span className="text-[10px] font-label text-on-surface-variant">USD / INR</span>
-              <span className="material-symbols-outlined text-on-surface-variant text-lg" data-icon="currency_exchange">currency_exchange</span>
-            </div>
-            <div>
-              <h4 className="text-xl font-headline font-bold">{dashboard.usd_inr.toFixed(2)}</h4>
-            </div>
-            <div className="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden mt-1">
-              <div className="w-3/4 h-full bg-tertiary" />
-            </div>
-          </motion.div>
+          {liveLoading ? (
+            <SkeletonCard />
+          ) : (
+            <motion.div custom={5} initial="hidden" animate="visible" variants={cardVariants}
+              className="neumorphic-elevated rounded-xl p-4 flex flex-col justify-between h-32 border border-white/5 relative overflow-hidden"
+            >
+              <div className="absolute top-2 right-2 flex items-center gap-1.5 bg-tertiary/10 px-2 py-0.5 rounded-full border border-tertiary/20">
+                <div className="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse shadow-[0_0_8px_rgba(255,180,171,0.8)]" />
+                <span className="text-[8px] uppercase font-bold text-tertiary tracking-wider">Live</span>
+              </div>
+              <div className="flex justify-between items-center mt-1">
+                <span className="text-[10px] font-label text-on-surface-variant">USD / INR</span>
+                <span className="material-symbols-outlined text-on-surface-variant text-lg" data-icon="currency_exchange">currency_exchange</span>
+              </div>
+              <div>
+                <h4 className="text-xl font-headline font-bold">
+                  {(liveData?.usd_inr ?? dashboard.usd_inr).toFixed(2)}
+                </h4>
+              </div>
+              <div className="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden mt-1">
+                <div className="w-3/4 h-full bg-tertiary" />
+              </div>
+            </motion.div>
+          )}
 
           {/* Feature Importance */}
           <motion.div custom={6} initial="hidden" animate="visible" variants={cardVariants}

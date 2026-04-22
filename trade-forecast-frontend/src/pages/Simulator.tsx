@@ -195,6 +195,7 @@ export default function Simulator() {
           {/* Left: Controls */}
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
             className="lg:col-span-4 h-full flex flex-col overflow-hidden"
+            id="simulator-controls"
           >
             <div className="bg-surface-container-low rounded-lg p-6 shadow-inner flex flex-col h-full overflow-hidden">
               <div className="flex items-center gap-3 mb-6 shrink-0">

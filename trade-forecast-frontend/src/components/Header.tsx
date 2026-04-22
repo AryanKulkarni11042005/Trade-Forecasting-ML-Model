@@ -34,6 +34,7 @@ export default function Header() {
           {/* Currency Toggle */}
           <button
             onClick={toggleCurrency}
+            id="header-currency"
             className="rounded-full px-2.5 py-1 cursor-pointer active:opacity-70 transition-all hover:bg-surface-container-high flex items-center gap-1.5 border border-outline-variant/20"
             title={`Switch to ${mode === 'INR' ? 'USD' : 'INR'}`}
           >
@@ -45,6 +46,7 @@ export default function Header() {
           {/* Theme Toggle */}
           <button
             onClick={toggle}
+            id="header-theme"
             className="rounded-full p-1.5 cursor-pointer active:opacity-70 transition-all hover:bg-surface-container-high"
             title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
