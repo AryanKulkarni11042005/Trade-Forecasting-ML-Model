@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const api = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: 'https://trade-forecasting-ml-model.onrender.com',
   timeout: 15000,
 })
 
