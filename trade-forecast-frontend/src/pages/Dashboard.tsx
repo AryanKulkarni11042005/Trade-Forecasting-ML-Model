@@ -140,10 +140,10 @@ export default function Dashboard() {
   // Compute total imports / exports per month
   const chartData = historical
     ? historical.slice(-24).map((r) => ({
-        date: formatDate(r.date),
-        actual: r.trade_deficit / 1e9,
-        predicted: (r.trade_deficit_next ?? r.trade_deficit) / 1e9,
-      }))
+      date: formatDate(r.date),
+      actual: r.trade_deficit / 1e9,
+      predicted: (r.trade_deficit_next ?? r.trade_deficit) / 1e9,
+    }))
     : [];
 
   const totalImports = (r: HistoricalRecord) =>
@@ -153,16 +153,16 @@ export default function Dashboard() {
 
   const importsData = historical
     ? historical.slice(-12).map((r) => ({
-        date: formatDate(r.date),
-        value: totalImports(r) / 1e9,
-      }))
+      date: formatDate(r.date),
+      value: totalImports(r) / 1e9,
+    }))
     : [];
 
   const exportsData = historical
     ? historical.slice(-12).map((r) => ({
-        date: formatDate(r.date),
-        value: totalExports(r) / 1e9,
-      }))
+      date: formatDate(r.date),
+      value: totalExports(r) / 1e9,
+    }))
     : [];
 
   const deficit = dashboard.current_trade_deficit;
@@ -344,7 +344,7 @@ export default function Dashboard() {
               </div>
               <div className="flex justify-between items-center mt-1">
                 <span className="text-[10px] font-label text-on-surface-variant">Crude Oil (Brent)</span>
-                <span className="material-symbols-outlined text-on-surface-variant text-lg" data-icon="oil_barrel">oil_barrel</span>
+                <span className="material-symbols-outlined text-on-surface-variant text-lg" data-icon=""></span>
               </div>
               <div>
                 <h4 className="text-xl font-headline font-bold">
@@ -370,7 +370,7 @@ export default function Dashboard() {
               </div>
               <div className="flex justify-between items-center mt-1">
                 <span className="text-[10px] font-label text-on-surface-variant">USD / INR</span>
-                <span className="material-symbols-outlined text-on-surface-variant text-lg" data-icon="currency_exchange">currency_exchange</span>
+                <span className="material-symbols-outlined text-on-surface-variant text-lg" data-icon=""></span>
               </div>
               <div>
                 <h4 className="text-xl font-headline font-bold">
