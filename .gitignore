@@ -6,3 +6,4 @@ data/
 csv/
 gdp.csv
 data/import-export
+./venv  
