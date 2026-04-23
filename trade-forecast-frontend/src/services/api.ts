@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const api = axios.create({
-  baseURL: 'https://trade-forecasting-ml-model.onrender.com',
+  baseURL: 'https://tradecast-e2aud8hdgbh8bzep.centralindia-01.azurewebsites.net',
   timeout: 15000,
 })
 
