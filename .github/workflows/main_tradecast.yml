@@ -10,18 +10,22 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
-      # Checkout code
+      # Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Set Python version (use stable version, NOT 3.13)
+      # Setup Python (stable version)
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      # Install dependencies (from backend folder)
+      # Install dependencies from backend
       - name: Install dependencies
         run: |
           cd backend
@@ -51,7 +55,7 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_55BA787552504FFCA48C4CCAC7AFDDC4 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D55F72D40C49491DAB8193377260FD3C }}
 
-      # Deploy to Azure Web App
+      # Deploy to Azure
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
