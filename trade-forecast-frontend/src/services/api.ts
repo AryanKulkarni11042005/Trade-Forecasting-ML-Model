@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const api = axios.create({
-  baseURL: 'http://34.168.24.142:8000',
+  baseURL: 'https://abrasion-mystify-exposable.ngrok-free.dev',
   timeout: 15000,
 })
 
