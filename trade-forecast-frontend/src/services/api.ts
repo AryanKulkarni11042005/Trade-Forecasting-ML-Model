@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const api = axios.create({
-  baseURL: 'https://tradecast-e2aud8hdgbh8bzep.centralindia-01.azurewebsites.net',
+  baseURL: 'http://34.168.24.142:8000',
   timeout: 15000,
 })
 
