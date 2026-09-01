@@ -160,6 +160,15 @@ export default function Forecast() {
   const icons = ['oil_barrel', 'currency_exchange', 'public', 'factory', 'trending_up'];
   const driverCorrelations = [0.82, 0.64, 0.45, 0.38, 0.31];
 
+  const countryMeta: Record<string, { label: string; icon: string }> = {
+    russia: { label: 'Russia', icon: 'flag' },
+    china: { label: 'China', icon: 'factory' },
+    usa: { label: 'USA', icon: 'account_balance' },
+  };
+  const byCountry = forecast.by_country
+    ? (Object.entries(forecast.by_country) as [string, number][])
+    : null;
+
   return (
     <AnimatePresence>
       <>
@@ -256,6 +265,39 @@ export default function Forecast() {
             </div>
           </div>
         </motion.div>
+
+        {/* Country Breakdown Row */}
+        {byCountry && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
+            className="bg-surface-container-high rounded-lg p-5 neumorphic-elevated shrink-0"
+          >
+            <h4 className="text-base font-bold font-headline mb-4">Forecast by Trading Partner</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {byCountry.map(([country, value], i) => {
+                const meta = countryMeta[country] ?? { label: country, icon: 'public' };
+                const isDeficit = value >= 0;
+                return (
+                  <motion.div key={country}
+                    initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
+                    className="flex items-center justify-between p-3 bg-surface-container-low rounded-md group hover:bg-surface-container transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                        <span className="material-symbols-outlined text-lg" data-icon={meta.icon}>{meta.icon}</span>
+                      </div>
+                      <span className="font-medium text-xs">{meta.label}</span>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <span className="text-[9px] text-on-surface-variant">{isDeficit ? 'Deficit' : 'Surplus'}</span>
+                      <span className={`text-xs font-bold ${isDeficit ? 'text-on-surface' : 'text-tertiary'}`}>{fmt(Math.abs(value))}</span>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
 
         {/* Drivers and Insight Row */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 shrink-0 pb-10">

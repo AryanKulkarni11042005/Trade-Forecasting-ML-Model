@@ -55,6 +55,11 @@ export interface ForecastData {
   three_month_forecast: number
   six_month_forecast: number
   risk: string
+  by_country?: {
+    russia: number
+    china: number
+    usa: number
+  }
   chart: {
     historical: ForecastChartPoint[]
     forecast: ForecastChartPoint[]
