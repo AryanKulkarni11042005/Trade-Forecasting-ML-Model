@@ -249,7 +249,7 @@ export default function Dashboard() {
             </div>
             <div>
               <p className="text-on-surface-variant text-[10px] font-label">Model Used</p>
-              <p className="text-2xl font-headline font-extrabold">{dashboard.model}</p>
+              <p className="text-2xl font-headline font-extrabold">Linear Regression</p>
             </div>
           </motion.div>
         </div>
