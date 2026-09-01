@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const api = axios.create({
-  baseURL: 'https://abrasion-mystify-exposable.ngrok-free.dev',
+  baseURL: 'https://nearly-discard-rearview.ngrok-free.dev',
   timeout: 15000,
   headers: {
     'ngrok-skip-browser-warning': 'true',
