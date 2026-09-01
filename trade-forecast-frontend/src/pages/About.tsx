@@ -70,7 +70,7 @@ export default function About() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { name: 'CatBoost', icon: 'hub', color: 'text-primary', hover: 'group-hover:bg-primary/10' },
+            { name: 'Linear Regression', icon: 'hub', color: 'text-primary', hover: 'group-hover:bg-primary/10' },
             { name: 'FastAPI', icon: 'bolt', color: 'text-tertiary', hover: 'group-hover:bg-tertiary/10' },
             { name: 'React', icon: 'deployed_code', color: 'text-sky-400', hover: 'group-hover:bg-sky-400/10' },
           ].map((tech, i) => (

@@ -18,7 +18,7 @@ def dashboard():
         "current_trade_deficit": current_total,
         "predicted_trade_deficit": predicted_total,
         "risk": "Medium",
-        "model": "CatBoost",
+        "model": "Linear Regression",
         "oil_price": float(oil_price),
         "usd_inr": float(usd_inr),
         "last_updated": str(latest_date)
